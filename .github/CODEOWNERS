@@ -1,0 +1,6 @@
+* @tu-username
+
+# Dueños específicos por carpeta
+/app/src/main/java/com/example/domain/ @domain-owner
+/app/src/main/java/com/example/data/ @data-owner
+/app/src/main/java/com/example/presentation/ @ui-owner
