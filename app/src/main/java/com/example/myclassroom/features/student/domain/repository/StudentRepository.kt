@@ -4,4 +4,5 @@ import com.example.myclassroom.features.student.domain.model.Student
 
 interface StudentRepository {
     suspend fun getAllStudents(): List<Student>
+    fun getStudent(): Student?
 }

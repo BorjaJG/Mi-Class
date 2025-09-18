@@ -19,5 +19,17 @@ class StudentDataRepository(
         }
     }
 
+    override fun getStudent(): Student? {
+
+        val studentFromLocal = studentXmlLocalDataSource.getStudent(id = "1")
+        if (studentFromLocal != null) {
+            return studentFromLocal
+        }
+        val studentsFromRemote = studentApiRemoteDataSource.getStudents()
+        studentXmlLocalDataSource.saveAll(studentsFromRemote)
+        return studentsFromRemote.find { it.id == "1" }
+    }
+
+
 
 }

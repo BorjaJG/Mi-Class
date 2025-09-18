@@ -31,6 +31,14 @@ class StudentXmlLocalDataSource(private val context: Context) {
         }
         return students
     }
+    fun getStudent(id: String): Student? {
+        val jsonStudent = sharedPreferences.getString(id, null)
+        return if (jsonStudent != null) {
+            gson.fromJson(jsonStudent, Student::class.java)
+        } else {
+            null
+        }
+    }
 
     fun deleteAll() {
         sharedPreferences.edit().clear().apply()

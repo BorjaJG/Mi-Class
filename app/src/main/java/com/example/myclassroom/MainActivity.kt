@@ -1,6 +1,7 @@
 package com.example.myclassroom
 
 import android.os.Bundle
+import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,5 +23,19 @@ class MainActivity : AppCompatActivity() {
         val students: List<Student> = StudentMockRemoteDataSource().getStudents()
         val adapter = StudentAdapter(students) { }
         recycler.adapter = adapter
+
+        // 🔎 Conectar el SearchView con el filtro
+        val searchView: SearchView = findViewById(R.id.searchStudents)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter.filter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return true
+            }
+        })
     }
 }
