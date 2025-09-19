@@ -30,6 +30,10 @@ class StudentDataRepository(
         return studentsFromRemote.find { it.id == "1" }
     }
 
+    override fun modifyStudent(student: Student) {
+        studentXmlLocalDataSource.modifyStudent(student)
+        studentApiRemoteDataSource.modifyStudent(student)
+    }
 
 
 }
