@@ -15,10 +15,10 @@ class StudentMockRemoteDataSource {
             age = 20,
             course = "DAM",
             semester = 1,
-            absences = listOf(
-                Absence(subject = "Programación", date = "2025-01-15", justified = false),
-                Absence(subject = "Bases de Datos", date = "2025-01-20", justified = true)
-            ),
+//            absences = listOf(
+//                Absence(subject = "Programación", date = "2025-01-15", justified = false),
+//                Absence(subject = "Bases de Datos", date = "2025-01-20", justified = true)
+//            ),
             subjects = listOf(
                 Subject(
                     code = "PRG",
@@ -41,9 +41,9 @@ class StudentMockRemoteDataSource {
             age = 21,
             course = "DAM",
             semester = 2,
-            absences = listOf(
-                Absence(subject = "Entornos", date = "2025-02-05", justified = false)
-            ),
+//            absences = listOf(
+//                Absence(subject = "Entornos", date = "2025-02-05", justified = false)
+//            ),
             subjects = listOf(
                 Subject(
                     code = "ENT",
@@ -66,7 +66,7 @@ class StudentMockRemoteDataSource {
             age = 19,
             course = "DAM",
             semester = 1,
-            absences = emptyList(),
+//            absences = emptyList(),
             subjects = listOf(
                 Subject(
                     code = "LMSGI",
@@ -110,4 +110,6 @@ class StudentMockRemoteDataSource {
     fun deleteStudent(id: String): Boolean {
         return students.removeIf { it.id == id }
     }
+
+
 }

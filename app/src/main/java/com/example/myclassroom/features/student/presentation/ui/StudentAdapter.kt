@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myclassroom.R
 import com.example.myclassroom.features.student.domain.model.Student
@@ -91,5 +92,12 @@ class StudentAdapter(
             // Si el filtro estaba activo y no estaba visible, actualizamos toda la lista
             notifyDataSetChanged()
         }
+    }
+
+    // --- ➕ Añadir un nuevo estudiante ---
+    fun addStudent(student: Student) {
+        students.add(student)
+        studentsFiltered.add(student)
+        notifyItemInserted(studentsFiltered.size - 1)
     }
 }

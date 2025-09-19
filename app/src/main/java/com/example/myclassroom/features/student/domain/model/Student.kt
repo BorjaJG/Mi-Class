@@ -7,7 +7,7 @@ data class Student(
     val age: Int,
     val course: String,
     val semester: Int,
-    val absences: List<Absence>,
+    //val absences: List<Absence>,
     val subjects: List<Subject>
 )
 

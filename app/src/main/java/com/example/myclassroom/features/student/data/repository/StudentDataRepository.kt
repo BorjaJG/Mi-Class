@@ -35,5 +35,11 @@ class StudentDataRepository(
         studentApiRemoteDataSource.modifyStudent(student)
     }
 
+    override fun addStudent(student: Student): Student {
+        studentXmlLocalDataSource.addStudent(student)
+        studentApiRemoteDataSource.addStudent(student)
+        return student
+    }
+
 
 }
