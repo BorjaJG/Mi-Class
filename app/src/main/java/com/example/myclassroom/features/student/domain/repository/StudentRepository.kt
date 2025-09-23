@@ -7,4 +7,7 @@ interface StudentRepository {
     fun getStudent(): Student?
     fun modifyStudent(student: Student)
     fun addStudent(student: Student): Student
+    fun deleteStudent(id: String): Boolean
+
+
 }

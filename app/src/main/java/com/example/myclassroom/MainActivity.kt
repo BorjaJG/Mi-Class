@@ -53,12 +53,14 @@ class MainActivity : AppCompatActivity() {
             showAddStudentDialog()
         }
 
-        // ⚡️ Ejemplo: Modificar un estudiante automáticamente al iniciar
+        // ⚡️  Modificar un estudiante automáticamente al iniciar
         val studentToUpdate = students.firstOrNull { it.id == "1" }
         studentToUpdate?.let {
             val updated = it.copy(course = "DAM actualizado", semester = 2)
             adapter.updateStudent(updated)
         }
+        // Eliminar
+
     }
 
     // --- ➕ Función para mostrar diálogo de AÑADIR estudiante ---
@@ -106,6 +108,7 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+
     // --- ✏️ Función para mostrar diálogo de EDITAR estudiante ---
     private fun showEditDialog(student: Student) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_edit_student, null)
@@ -133,5 +136,10 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    fun deleteStudent(id: String) {
+
+
     }
 }

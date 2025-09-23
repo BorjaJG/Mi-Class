@@ -41,5 +41,13 @@ class StudentDataRepository(
         return student
     }
 
+    override fun deleteStudent(id: String): Boolean {
+        studentXmlLocalDataSource.deleteStudent(id)
+        studentApiRemoteDataSource.deleteStudent(id)
+        return true
+    }
+
 
 }
+
+

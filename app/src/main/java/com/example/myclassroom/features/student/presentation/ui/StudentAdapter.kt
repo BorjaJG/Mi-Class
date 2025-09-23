@@ -7,15 +7,15 @@ import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myclassroom.R
 import com.example.myclassroom.features.student.domain.model.Student
 import java.util.Locale
 
 class StudentAdapter(
-    private val students: MutableList<Student>,   // ✅ mutable para poder modificar
-    private val onClick: (Student) -> Unit
+    private val students: MutableList<Student>,
+    private val onClick: (Student) -> Unit,
+    private val onDelete: (Student) -> Unit // ✅ Nuevo callback para eliminar
 ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>(), Filterable {
 
     private var studentsFiltered: MutableList<Student> = students.toMutableList()
@@ -24,6 +24,8 @@ class StudentAdapter(
         private val name: TextView = view.findViewById(R.id.tvStudentName)
         private val course: TextView = view.findViewById(R.id.tvStudentCourse)
         private val btnEdit: Button = view.findViewById(R.id.btnEditStudent)
+        private val btnDelete: Button =
+            view.findViewById(R.id.btnDeleteStudent) // ✅ Corregido nombre
 
         fun bind(student: Student) {
             name.text = student.name
@@ -34,9 +36,14 @@ class StudentAdapter(
 
             // Click sobre el botón Editar
             btnEdit.setOnClickListener { onClick(student) }
+
+            // Click sobre el botón Borrar
+            btnDelete.setOnClickListener {
+                onDelete(student) // ✅ Notificar al fragment/activity
+                deleteStudent(student.id) // ✅ Eliminar del adapter
+            }
         }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         StudentViewHolder(
@@ -87,9 +94,8 @@ class StudentAdapter(
         val indexFiltered = studentsFiltered.indexOfFirst { it.id == student.id }
         if (indexFiltered != -1) {
             studentsFiltered[indexFiltered] = student
-            notifyItemChanged(indexFiltered) // ✅ actualizar solo ese item
+            notifyItemChanged(indexFiltered)
         } else {
-            // Si el filtro estaba activo y no estaba visible, actualizamos toda la lista
             notifyDataSetChanged()
         }
     }
@@ -99,5 +105,23 @@ class StudentAdapter(
         students.add(student)
         studentsFiltered.add(student)
         notifyItemInserted(studentsFiltered.size - 1)
+    }
+
+    // --- 🗑️ Eliminar un estudiante ---
+    fun deleteStudent(id: String) { // ✅ Corregido nombre de función
+        // Buscar posición en la lista filtrada
+        val filteredIndex = studentsFiltered.indexOfFirst { it.id == id }
+
+        // Eliminar de ambas listas
+        students.removeAll { it.id == id }
+
+        val wasRemovedFromFiltered = studentsFiltered.removeAll { it.id == id }
+
+        // Notificar al adapter
+        if (wasRemovedFromFiltered && filteredIndex != -1) {
+            notifyItemRemoved(filteredIndex)
+        } else {
+            notifyDataSetChanged()
+        }
     }
 }
