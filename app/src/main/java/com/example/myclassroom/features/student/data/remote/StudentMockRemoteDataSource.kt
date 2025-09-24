@@ -86,4 +86,8 @@ class StudentMockRemoteDataSource {
     fun getStudents(): List<Student> {
         return students
     }
+
+    fun getStudent(id: String): Student? {
+        return students.find { it.id == id }
+    }
 }
