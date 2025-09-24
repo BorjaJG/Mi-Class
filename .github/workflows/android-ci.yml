@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      issues: write  # ← PERMISO NECESARIO AÑADIDO
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,3 +30,23 @@ jobs:
 
       - name: Run tests
         run: ./gradlew test
+
+  # Job adicional para manejar fallos (opcional)
+  notify-on-failure:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    needs: build
+    if: failure()  # Solo se ejecuta si el job build falla
+    steps:
+      - name: Assign issue on failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Asignar issue cuando hay fallo en el build
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 12,  // Reemplaza con el número de issue correcto
+              assignees: ['BorjaJG']
+            })
