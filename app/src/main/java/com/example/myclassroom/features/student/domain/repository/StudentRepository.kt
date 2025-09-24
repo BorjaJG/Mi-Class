@@ -6,4 +6,5 @@ interface StudentRepository {
     suspend fun getAllStudents(): List<Student>
     fun getStudent(): Student?
     fun modifyStudent(student: Student)
+    fun addStudent(student: Student): Student
 }

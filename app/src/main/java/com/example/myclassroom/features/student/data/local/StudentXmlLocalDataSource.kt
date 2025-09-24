@@ -48,4 +48,7 @@ class StudentXmlLocalDataSource(private val context: Context) {
     fun deleteAll() {
         sharedPreferences.edit().clear().apply()
     }
+    fun addStudent(student: Student) {
+        sharedPreferences.all.values
+    }
 }
