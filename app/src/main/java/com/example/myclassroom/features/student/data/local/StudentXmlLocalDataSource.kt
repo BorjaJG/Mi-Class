@@ -39,6 +39,11 @@ class StudentXmlLocalDataSource(private val context: Context) {
             null
         }
     }
+    fun modifyStudent(student: Student) {
+        val editor = sharedPreferences.edit()
+        editor.putString(student.id, gson.toJson(student))
+        editor.apply()
+    }
 
     fun deleteAll() {
         sharedPreferences.edit().clear().apply()

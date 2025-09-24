@@ -3,6 +3,7 @@ package com.example.myclassroom.features.student.presentation
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
@@ -12,7 +13,7 @@ import com.example.myclassroom.features.student.domain.model.Student
 import java.util.Locale
 
 class StudentAdapter(
-    private val students: List<Student>,
+    private val students: MutableList<Student>,   // ✅ mutable para poder modificar
     private val onClick: (Student) -> Unit
 ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>(), Filterable {
 
@@ -21,13 +22,20 @@ class StudentAdapter(
     inner class StudentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val name: TextView = view.findViewById(R.id.tvStudentName)
         private val course: TextView = view.findViewById(R.id.tvStudentCourse)
+        private val btnEdit: Button = view.findViewById(R.id.btnEditStudent)
 
         fun bind(student: Student) {
             name.text = student.name
             course.text = "${student.course} - Semestre ${student.semester}"
+
+            // Click sobre el ítem
             itemView.setOnClickListener { onClick(student) }
+
+            // Click sobre el botón Editar
+            btnEdit.setOnClickListener { onClick(student) }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         StudentViewHolder(
@@ -41,7 +49,7 @@ class StudentAdapter(
         holder.bind(studentsFiltered[position])
     }
 
-    // --- Filtro de búsqueda ---
+    // --- 🔎 Filtro de búsqueda ---
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -63,6 +71,25 @@ class StudentAdapter(
                     (results?.values as? List<Student>)?.toMutableList() ?: mutableListOf()
                 notifyDataSetChanged()
             }
+        }
+    }
+
+    // --- ✏️ Modificar un estudiante ---
+    fun updateStudent(student: Student) {
+        // Buscar en la lista original
+        val indexOriginal = students.indexOfFirst { it.id == student.id }
+        if (indexOriginal != -1) {
+            students[indexOriginal] = student
+        }
+
+        // Buscar en la lista filtrada
+        val indexFiltered = studentsFiltered.indexOfFirst { it.id == student.id }
+        if (indexFiltered != -1) {
+            studentsFiltered[indexFiltered] = student
+            notifyItemChanged(indexFiltered) // ✅ actualizar solo ese item
+        } else {
+            // Si el filtro estaba activo y no estaba visible, actualizamos toda la lista
+            notifyDataSetChanged()
         }
     }
 }

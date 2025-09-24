@@ -6,7 +6,8 @@ import com.example.myclassroom.features.student.domain.model.Subject
 
 class StudentMockRemoteDataSource {
 
-    private val students = listOf(
+    // Lista mutable para poder modificar estudiantes
+    private val students = mutableListOf(
         Student(
             id = "1",
             dni = "12345678A",
@@ -83,11 +84,30 @@ class StudentMockRemoteDataSource {
         )
     )
 
+
+    fun addStudent(student: Student) {
+        students.add(student)
+    }
+
+
     fun getStudents(): List<Student> {
         return students
     }
 
     fun getStudent(id: String): Student? {
         return students.find { it.id == id }
+    }
+
+
+    fun modifyStudent(student: Student) {
+        val index = students.indexOfFirst { it.id == student.id }
+        if (index != -1) {
+            students[index] = student
+        }
+    }
+
+
+    fun deleteStudent(id: String): Boolean {
+        return students.removeIf { it.id == id }
     }
 }
