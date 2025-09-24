@@ -27,10 +27,12 @@ class MainActivity : AppCompatActivity() {
         val recycler: RecyclerView = findViewById(R.id.recyclerStudents)
         recycler.layoutManager = LinearLayoutManager(this)
 
-        // Inicializar el adapter
-        adapter = StudentAdapter(students) { student ->
-            showEditDialog(student)
-        }
+        // ✅ Inicializar el adapter con ambos callbacks
+        adapter = StudentAdapter(
+            students = students,
+            onEdit = { student -> showEditDialog(student) },
+            onDelete = { student -> deleteStudent(student) }
+        )
         recycler.adapter = adapter
 
         // 🔎 Conectar el SearchView con el filtro
@@ -53,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             showAddStudentDialog()
         }
 
-        // ⚡️ Ejemplo: Modificar un estudiante automáticamente al iniciar
+        // ⚡️ Modificar un estudiante automáticamente al iniciar (opcional)
         val studentToUpdate = students.firstOrNull { it.id == "1" }
         studentToUpdate?.let {
             val updated = it.copy(course = "DAM actualizado", semester = 2)
@@ -88,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val newStudent = Student(
-                    id = (students.size + 1).toString(),
+                    id = (System.currentTimeMillis()).toString(), // ✅ ID único
                     name = name,
                     course = course,
                     semester = semester,
@@ -98,7 +100,6 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 // Añadir a la lista y actualizar adapter
-                students.add(newStudent)
                 adapter.addStudent(newStudent)
                 Toast.makeText(this, "Estudiante añadido", Toast.LENGTH_SHORT).show()
             }
@@ -123,13 +124,35 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Editar estudiante")
             .setView(dialogView)
             .setPositiveButton("Guardar") { _, _ ->
+                val name = etName.text.toString()
+                val course = etCourse.text.toString()
+                val semester = etSemester.text.toString().toIntOrNull() ?: student.semester
+
+                if (name.isBlank()) {
+                    Toast.makeText(this, "El nombre es obligatorio", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
                 val updated = student.copy(
-                    name = etName.text.toString(),
-                    course = etCourse.text.toString(),
-                    semester = etSemester.text.toString().toIntOrNull() ?: student.semester
+                    name = name,
+                    course = course,
+                    semester = semester
                 )
                 adapter.updateStudent(updated)
                 Toast.makeText(this, "Estudiante actualizado", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    // --- 🗑️ Función para eliminar estudiante ---
+    private fun deleteStudent(student: Student) {
+        AlertDialog.Builder(this)
+            .setTitle("Eliminar estudiante")
+            .setMessage("¿Estás seguro de que quieres eliminar a ${student.name}?")
+            .setPositiveButton("Eliminar") { _, _ ->
+                adapter.deleteStudent(student)
+                Toast.makeText(this, "Estudiante eliminado", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancelar", null)
             .show()
